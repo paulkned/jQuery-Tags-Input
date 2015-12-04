@@ -50,6 +50,14 @@ described here.
 	  autocomplete:{selectFirst:true,width:'100px',autoFill:true}
 	});
 
+If you want to disable manual additions to the tagsinput field and only want to use
+autocompleted values use the autocomplete_only option
+
+	$('#tags').tagsInput({
+	  autocomplete_url:'http://myserver.com/api/autocomplete',
+	  autocomplete_only:true
+	});
+
 You can add and remove tags by calling the addTag() and removeTag() functions.
 
 	$('#tags').addTag('foo');
@@ -88,6 +96,7 @@ option to false.
 	$(selector).tagsInput({
 	   'autocomplete_url': url_to_autocomplete_api,
 	   'autocomplete': { option: value, option: value},
+	   'autocomplete_only': false,
 	   'height':'100px',
 	   'width':'300px',
 	   'interactive':true,
