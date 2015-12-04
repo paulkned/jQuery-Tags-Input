@@ -18,6 +18,7 @@
 
 	var delimiter = new Array();
 	var tags_callbacks = new Array();
+	var autocomplete_only = false;
 	$.fn.doAutosize = function(o){
 	    var minWidth = $(this).data('minwidth'),
 	        maxWidth = $(this).data('maxwidth'),
@@ -85,14 +86,20 @@
 
 				value = jQuery.trim(value);
 
+				var skipTag = false;
+
 				if (options.unique) {
-					var skipTag = $(this).tagExist(value);
-					if(skipTag == true) {
-					    //Marks fake input as not_valid to let styling it
-    				    $('#'+id+'_tag').addClass('not_valid');
-    				}
-				} else {
-					var skipTag = false;
+					skipTag = $(this).tagExist(value);
+				}
+
+				// Only allow autocompleting
+				if (!skipTag && autocomplete_only && !options.autocompleted) {
+					skipTag = true;
+				}
+
+				//Marks fake input as not_valid to let styling it
+				if (skipTag == true) {
+					$('#'+id+'_tag').addClass('not_valid');
 				}
 
 				if (value !='' && skipTag != true) {
@@ -271,13 +278,13 @@
 						$(data.fake_input).autocomplete(settings.autocomplete_url, settings.autocomplete);
 						$(data.fake_input).bind('result',data,function(event,data,formatted) {
 							if (data) {
-								$('#'+id).addTag(data[0] + "",{focus:true,unique:(settings.unique)});
+								$('#'+id).addTag(data[0] + "",{focus:true,unique:(settings.unique),autocompleted:true});
 							}
 					  	});
 					} else if (jQuery.ui.autocomplete !== undefined) {
 						$(data.fake_input).autocomplete(autocomplete_options);
 						$(data.fake_input).bind('autocompleteselect',data,function(event,ui) {
-							$(event.data.real_input).addTag(ui.item.value,{focus:true,unique:(settings.unique)});
+							$(event.data.real_input).addTag(ui.item.value,{focus:true,unique:(settings.unique),autocompleted:true});
 							return false;
 						});
 					}
